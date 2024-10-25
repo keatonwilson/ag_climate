@@ -4,9 +4,12 @@ toc: false
 
 <div class="hero">
   <h1>Ag Production Climate Explorer</h1>
-  <h2>Welcome to your new app! Edit&nbsp;<code style="font-size: 90%;">src/index.md</code> to change this page.</h2>
-  <a href="https://observablehq.com/framework/getting-started">Get started<span style="display: inline-block; margin-left: 0.25rem;">↗︎</span></a>
+  <h2>This dashboard is designed to facilitate exploration of the impacts of climate change on global crop and livestock production. It's organized into a few different dashboards/pages, and relies mostly on data from the <a href='https://www.fao.org/faostat/en/#data'>Food and Agriculture of the United Nations (FAO)</a>.
+  </h2>
+  <br/>
+  <h2>Explore the data below, and enjoy!</h2>
 </div>
+
 
 <div class="grid grid-cols-2" style="grid-auto-rows: 504px;">
   <div class="card">${
@@ -95,7 +98,7 @@ Here are some ideas of things you could try…
 .hero h2 {
   margin: 0;
   max-width: 34em;
-  font-size: 20px;
+  font-size: 24px;
   font-style: initial;
   font-weight: 500;
   line-height: 1.5;
