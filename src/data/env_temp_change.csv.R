@@ -1,11 +1,12 @@
 library(tidyverse)
 library(stringr)
+library(lubridate)
 
 # initial data load
 env_data <- read_csv("./src/data-files/Environment_Temperature_change_E_All_Data.csv") # nolint: line_length_linter.
 
-# wrangling
-env_data |>
+# init wrangling
+subset_clean <- env_data |>
   select(
     Area,
     Months,
@@ -18,4 +19,15 @@ env_data |>
     names_to = "Year",
     values_to = "temp_change"
   ) |>
-  mutate(Year = as.integer(str_remove(Year, "^Y")))
+  mutate(Year = as.integer(str_remove(Year, "^Y"))) |>
+  filter(Months %in% month.name)
+
+# for each year, cumulative change across all months
+subset_clean |>
+  mutate(month_number = month(parse_date_time(Months, "B"))) |>
+  group_by(Area) |>
+  arrange(Year, month_number) |>
+  ungroup() |>
+  summarize(temp_change_sum = sum(temp_change, na.rm = TRUE), 
+    .by = c("Area", "Year")
+  )
