@@ -23,12 +23,13 @@ subset_clean <- env_data |>
   filter(Months %in% month.name)
 
 # for each year, cumulative change across all months
-out = subset_clean |>
+out <- subset_clean |>
   mutate(month_number = month(parse_date_time(Months, "B"))) |>
   group_by(Area) |>
   arrange(Year, month_number) |>
   ungroup() |>
-  summarize(temp_change_sum = sum(temp_change, na.rm = TRUE), 
+  summarize(
+    temp_change_sum = sum(temp_change, na.rm = TRUE),
     .by = c("Area", "Year")
   )
 
