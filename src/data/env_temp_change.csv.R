@@ -1,0 +1,21 @@
+library(tidyverse)
+library(stringr)
+
+# initial data load
+env_data <- read_csv("./src/data-files/Environment_Temperature_change_E_All_Data.csv") # nolint: line_length_linter.
+
+# wrangling
+env_data |>
+  select(
+    Area,
+    Months,
+    Element,
+    starts_with("Y"),
+    -ends_with("F")
+  ) |>
+  pivot_longer(
+    starts_with("Y"),
+    names_to = "Year",
+    values_to = "temp_change"
+  ) |>
+  mutate(Year = as.integer(str_remove(Year, "^Y")))
