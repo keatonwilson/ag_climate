@@ -23,7 +23,7 @@ subset_clean <- env_data |>
   filter(Months %in% month.name)
 
 # for each year, cumulative change across all months
-subset_clean |>
+out = subset_clean |>
   mutate(month_number = month(parse_date_time(Months, "B"))) |>
   group_by(Area) |>
   arrange(Year, month_number) |>
@@ -31,3 +31,6 @@ subset_clean |>
   summarize(temp_change_sum = sum(temp_change, na.rm = TRUE), 
     .by = c("Area", "Year")
   )
+
+# converteing to delimted string so that data can be viewed by Observable
+cat(format_csv(out))
