@@ -2,6 +2,35 @@
 toc: false
 ---
 
+<!-- Load the data, build out filters -->
+```js
+import * as Inputs from "npm:@observablehq/inputs";
+
+// Load data from loader
+const envData = await FileAttachment("data/env_temp_change.csv").csv({ typed: true });
+
+// Define countryFilter and yearFilter using view()
+const countryFilter = view(Inputs.select(envData.map(d => d.Area).filter((v, i, a) => a.indexOf(v) === i), {
+  label: "Select Countries",
+  multiple: true,
+  sort: "ascending",
+  placeholder: "Select up to 5 countries",
+  value: ["Afghanistan"],
+  max: 5
+}));
+
+const yearFilter = view(Inputs.range([1961, 2023], {
+  label: "Select Year Range",
+  step: 1,
+  format: d3.format("d")
+}));
+
+const countrySelect = Generators.input(countryFilter);
+const yearSelection = Generators.input(yearFilter);
+
+```
+
+
 <div class="hero">
   <h1>Ag Production Climate Explorer</h1>
   <h2>This dashboard is designed to facilitate exploration of the impacts of climate change on global crop and livestock production. It's organized into a few different dashboards/pages, and relies mostly on data from the <a href='https://www.fao.org/faostat/en/#data'>Food and Agriculture of the United Nations (FAO)</a>.
