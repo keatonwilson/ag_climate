@@ -3,33 +3,55 @@ toc: false
 ---
 
 <!-- Load the data, build out filters -->
+
 ```js
 import * as Inputs from "npm:@observablehq/inputs";
+// import * as Generators from "npm:@observablehq/generators";
 
 // Load data from loader
-const envData = await FileAttachment("data/env_temp_change.csv").csv({ typed: true });
+const envData = await FileAttachment("data/env_temp_change.csv").csv({
+  typed: true,
+});
 
 // Define countryFilter and yearFilter using view()
-const countryFilter = view(Inputs.select(envData.map(d => d.Area).filter((v, i, a) => a.indexOf(v) === i), {
-  label: "Select Countries",
-  multiple: true,
-  sort: "ascending",
-  placeholder: "Select up to 5 countries",
-  value: ["Afghanistan"],
-  max: 5
-}));
+const countryFilter = Inputs.select(
+  envData.map((d) => d.Area).filter((v, i, a) => a.indexOf(v) === i),
+  {
+    label: "Select Countries",
+    multiple: true,
+    sort: "ascending",
+    placeholder: "Select up to 5 countries",
+    value: ["Afghanistan"],
+    max: 5,
+  }
+);
 
-const yearFilter = view(Inputs.range([1961, 2023], {
-  label: "Select Year Range",
+const startYearFilter = Inputs.range([1961, 2023], {
+  label: "Select Start Year",
   step: 1,
-  format: d3.format("d")
-}));
+  format: d3.format("d"),
+});
 
-const countrySelect = Generators.input(countryFilter);
-const yearSelection = Generators.input(yearFilter);
+const endYearFilter = Inputs.range([1961, 2023], {
+  label: "Select End Year",
+  step: 1,
+  format: d3.format("d"),
+});
+
+// use generators
+const countryVal = Generators.input(countryFilter);
+const startYearVal = Generators.input(startYearFilter);
+const endYearVal = Generators.input(endYearFilter);
+
+// Create a reactive view of the filtered data
+const filteredData = {
+  return envData
+};
+
+// Generator
+// const filtDataReal = Generators.input(filteredData);
 
 ```
-
 
 <div class="hero">
   <h1>Ag Production Climate Explorer</h1>
@@ -39,65 +61,35 @@ const yearSelection = Generators.input(yearFilter);
   <h2>Explore the data below, and enjoy!</h2>
 </div>
 
+---
 
-<div class="grid grid-cols-2" style="grid-auto-rows: 504px;">
+<div class="grid grid-cols-2">
+
+  <div class="card">
+    ${countryFilter}
+  </div>
+
+  <div class="card">
+    ${startYearFilter} 
+    ${endYearFilter} 
+  </div>
+</div>
+
+<div class="grid grid-cols-1">
   <div class="card">${
-    resize((width) => Plot.plot({
-      title: "Your awesomeness over time 🚀",
-      subtitle: "Up and to the right!",
+    <!-- resize((width) => Plot.plot({
+      title: "Climate Data over Selected Years",
       width,
-      y: {grid: true, label: "Awesomeness"},
+      y: {grid: true, label: "Temperature Change"},
+      x: {label: "Year"},
       marks: [
-        Plot.ruleY([0]),
-        Plot.lineY(aapl, {x: "Date", y: "Close", tip: true})
+        Plot.line(filtDataReal {x: "Year", y: "TemperatureChange", stroke: "Area", tip: true})
       ]
-    }))
-  }</div>
-  <div class="card">${
-    resize((width) => Plot.plot({
-      title: "How big are penguins, anyway? 🐧",
-      width,
-      grid: true,
-      x: {label: "Body mass (g)"},
-      y: {label: "Flipper length (mm)"},
-      color: {legend: true},
-      marks: [
-        Plot.linearRegressionY(penguins, {x: "body_mass_g", y: "flipper_length_mm", stroke: "species"}),
-        Plot.dot(penguins, {x: "body_mass_g", y: "flipper_length_mm", stroke: "species", tip: true})
-      ]
-    }))
+    })); -->
   }</div>
 </div>
 
 ---
-
-## Next steps
-
-Here are some ideas of things you could try…
-
-<div class="grid grid-cols-4">
-  <div class="card">
-    Chart your own data using <a href="https://observablehq.com/framework/lib/plot"><code>Plot</code></a> and <a href="https://observablehq.com/framework/files"><code>FileAttachment</code></a>. Make it responsive using <a href="https://observablehq.com/framework/javascript#resize(render)"><code>resize</code></a>.
-  </div>
-  <div class="card">
-    Create a <a href="https://observablehq.com/framework/project-structure">new page</a> by adding a Markdown file (<code>whatever.md</code>) to the <code>src</code> folder.
-  </div>
-  <div class="card">
-    Add a drop-down menu using <a href="https://observablehq.com/framework/inputs/select"><code>Inputs.select</code></a> and use it to filter the data shown in a chart.
-  </div>
-  <div class="card">
-    Write a <a href="https://observablehq.com/framework/loaders">data loader</a> that queries a local database or API, generating a data snapshot on build.
-  </div>
-  <div class="card">
-    Import a <a href="https://observablehq.com/framework/imports">recommended library</a> from npm, such as <a href="https://observablehq.com/framework/lib/leaflet">Leaflet</a>, <a href="https://observablehq.com/framework/lib/dot">GraphViz</a>, <a href="https://observablehq.com/framework/lib/tex">TeX</a>, or <a href="https://observablehq.com/framework/lib/duckdb">DuckDB</a>.
-  </div>
-  <div class="card">
-    Ask for help, or share your work or ideas, on our <a href="https://github.com/observablehq/framework/discussions">GitHub discussions</a>.
-  </div>
-  <div class="card">
-    Visit <a href="https://github.com/observablehq/framework">Framework on GitHub</a> and give us a star. Or file an issue if you’ve found a bug!
-  </div>
-</div>
 
 <style>
 
